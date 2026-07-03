@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hostinger / Zeabur / Render 比較簡報</title>
+  <style>
+    :root {
+      --bg:#08101f;
+      --bg2:#0d1830;
+      --panel:rgba(255,255,255,.06);
+      --panel2:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.12);
+      --text:#edf3ff;
+      --muted:#a8b6d8;
+      --accent:#7ca7ff;
+      --accent2:#8b5cff;
+      --good:#47d7a1;
+      --warn:#f6c45f;
+      --shadow:0 24px 80px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(124,167,255,.24), transparent 28%),
+        radial-gradient(circle at 85% 0%, rgba(139,92,255,.18), transparent 26%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      line-height:1.55;
+    }
+    .wrap{max-width:1360px;margin:0 auto;padding:28px 20px 56px}
+    .deck{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+    }
+    .deck::before,.deck::after{
+      content:"";position:absolute;border-radius:999px;filter:blur(3px);pointer-events:none;opacity:.75
+    }
+    .deck::before{width:340px;height:340px;right:-120px;top:-130px;background:radial-gradient(circle, rgba(124,167,255,.28), transparent 62%)}
+    .deck::after{width:260px;height:260px;left:-110px;bottom:14%;background:radial-gradient(circle, rgba(139,92,255,.18), transparent 66%)}
+    .hero{
+      display:grid;grid-template-columns:1.5fr .9fr;gap:18px;align-items:stretch;
+      padding:28px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(135deg, rgba(255,255,255,.04), transparent 65%);
+    }
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 12px;border-radius:999px;
+      background:rgba(124,167,255,.12);border:1px solid rgba(124,167,255,.25);
+      color:#cfe0ff;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    }
+    h1{margin:14px 0 12px;font-size:clamp(34px,4.6vw,58px);line-height:1.02;letter-spacing:-.03em}
+    .lead{margin:0;color:var(--muted);font-size:16px;max-width:68ch}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+    .btn{
+      border:0;border-radius:999px;padding:12px 16px;
+      font-weight:800;cursor:pointer;color:white;
+      background:linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow:0 10px 24px rgba(124,167,255,.18);
+    }
+    .btn.secondary{background:rgba(255,255,255,.08);border:1px solid var(--line);box-shadow:none}
+    .hero-side{
+      display:grid;gap:12px;align-content:stretch
+    }
+    .metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+    .metric,.panel,.card,.table-wrap,.footer-note{
+      background:rgba(255,255,255,.055);border:1px solid var(--line);border-radius:var(--radius)
+    }
+    .metric{padding:14px 14px 12px}
+    .metric b{display:block;font-size:12px;color:#d7e3ff;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+    .metric span{display:block;font-size:18px;font-weight:800}
+    .metric small{display:block;color:var(--muted);margin-top:4px}
+    .summary-panel{padding:18px 18px 16px;display:grid;gap:12px;align-content:start}
+    .summary-panel h3{margin:0;font-size:18px}
+    .summary-list{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+    .summary-list li{display:flex;gap:10px;align-items:flex-start;color:var(--muted)}
+    .dot{width:10px;height:10px;border-radius:50%;margin-top:6px;background:linear-gradient(135deg,var(--accent),var(--accent2));flex:0 0 auto}
+    .section{padding:22px 28px 28px}
+    .section-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:16px}
+    .section-head h2{margin:0;font-size:24px;letter-spacing:-.02em}
+    .section-head p{margin:0;color:var(--muted);font-size:13px}
+    .comparison-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{padding:18px;position:relative;overflow:hidden}
+    .card::after{content:"";position:absolute;inset:auto -30px -40px auto;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle, rgba(124,167,255,.16), transparent 64%)}
+    .platform-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.07);color:#dde7ff;font-size:12px;font-weight:700}
+    .card h3{margin:14px 0 8px;font-size:24px}
+    .price{font-size:32px;font-weight:900;letter-spacing:-.03em;margin:10px 0 8px}
+    .price sub{font-size:13px;font-weight:700;color:var(--muted)}
+    .subcopy{color:var(--muted);font-size:13px;margin:0 0 14px}
+    .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 14px}
+    .pill{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line);font-size:12px;color:#dce5ff}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .mini{padding:12px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+    .mini h4{margin:0 0 8px;font-size:13px;letter-spacing:.02em;text-transform:uppercase;color:#dce5ff}
+    .mini ul{margin:0 0 0 18px;padding:0;color:var(--muted)}
+    .mini li{margin:6px 0}
+    .table-wrap{overflow:auto;padding:0}
+    table{width:100%;border-collapse:collapse;min-width:980px}
+    th,td{padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+    th{position:sticky;top:0;background:rgba(12,19,37,.95);backdrop-filter:blur(10px);text-align:left;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#dfe8ff}
+    td{color:var(--text)}
+    td .muted{color:var(--muted)}
+    tr:hover td{background:rgba(255,255,255,.03)}
+    .recommend{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:16px
+    }
+    .recommend .card strong{display:block;font-size:17px;margin:8px 0 6px}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+    .badge.good{background:rgba(71,215,161,.14);color:#a9f2d8}
+    .badge.warn{background:rgba(246,196,95,.14);color:#ffe0a3}
+    .badge.accent{background:rgba(124,167,255,.14);color:#cfe0ff}
+    .footer-note{margin:0 28px 28px;padding:16px 18px;color:var(--muted);font-size:13px}
+    .footer-note b{color:#fff}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap}
+    .linkline{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    a{color:#9dc0ff;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .bar{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid var(--line)}
+    .bar > span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+    .bar-label{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted);margin:8px 0 6px}
+    @media (max-width: 1100px){
+      .hero,.comparison-grid,.recommend,.metric-grid,.two-col{grid-template-columns:1fr}
+      .section-head{flex-direction:column;align-items:flex-start}
+    }
+    @media print{
+      body{background:#fff;color:#000}
+      .deck,.card,.metric,.summary-panel,.table-wrap,.footer-note{box-shadow:none;background:#fff;border-color:#ccc}
+      .btn,.toolbar,.hero-actions{display:none}
+      a{color:#000;text-decoration:underline}
+      th{background:#f2f2f2;color:#000}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="deck">
+      <section class="hero">
+        <div>
+          <span class="eyebrow">Product-style comparison deck</span>
+          <h1>Hostinger / Zeabur / Render<br>三平台比較簡報</h1>
+          <p class="lead">這版把資訊做成更像產品簡報的視覺：大標題、強對比卡片、重點數字、推薦情境與決策表。適合直接拿去跟同事或客戶一起看。</p>
+          <div class="hero-actions">
+            <button class="btn" onclick="window.print()">列印 / 另存 PDF</button>
+            <button class="btn secondary" onclick="navigator.clipboard.writeText('C:\\Users\\mandy\\Downloads\\hosting-platform-comparison-dashboard.html'); alert('已複製檔案路徑');">複製檔案路徑</button>
+          </div>
+          <div class="metric-grid">
+            <div class="metric"><b>最佳入門</b><span>Hostinger</span><small>傳統網站 / WordPress / 電商</small></div>
+            <div class="metric"><b>最佳開發體驗</b><span>Zeabur</span><small>AI DevOps / 容器化 / 小團隊</small></div>
+            <div class="metric"><b>最佳雲端治理</b><span>Render</span><small>GitOps / Team / Production</small></div>
+          </div>
+        </div>
+        <aside class="summary-panel">
+          <h3>一眼看懂</h3>
+          <ul class="summary-list">
+            <li><span class="dot"></span><span><b>Hostinger</b>：最便宜、最像傳統主機，適合快速做站。</span></li>
+            <li><span class="dot"></span><span><b>Zeabur</b>：部署流程最像聊天助手，適合開發者。</span></li>
+            <li><span class="dot"></span><span><b>Render</b>：更像完整 PaaS，適合正式產品與團隊治理。</span></li>
+          </ul>
+          <div>
+            <div class="bar-label"><span>成本親民</span><span>Hostinger</span></div>
+            <div class="bar"><span style="width:92%"></span></div>
+            <div class="bar-label"><span>自動化 / AI</span><span>Zeabur</span></div>
+            <div class="bar"><span style="width:86%"></span></div>
+            <div class="bar-label"><span>團隊治理</span><span>Render</span></div>
+            <div class="bar"><span style="width:90%"></span></div>
+          </div>
+          <div class="linkline">
+            <a href="#overview">總覽表</a>
+            <a href="#platforms">平台卡片</a>
+            <a href="#recommend">推薦情境</a>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section" id="overview">
+        <div class="section-head">
+          <div>
+            <h2>總覽比較</h2>
+            <p>把費用、架站方式、優缺點、客群直接並排</p>
+          </div>
+          <p>USD / 以官方公開頁面為準</p>
+        </div>
+        <div class="table-wrap card">
+          <table>
+            <thead>
+              <tr>
+                <th>平台</th>
+                <th>主要費用</th>
+                <th>架站方式</th>
+                <th>優點</th>
+                <th>缺點</th>
+                <th>主要客群 / 特性</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Hostinger</b><br><span class="muted">傳統網站主機</span></td>
+                <td>Web hosting：Premium <b>$2.99/mo</b>、Business <b>$3.99/mo</b>、Cloud Startup <b>$7.99/mo</b>（多為長約促銷）；VPS：KVM 1 <b>$6.49/mo</b>、KVM 2 <b>$8.99/mo</b>、KVM 4 <b>$12.99/mo</b>、KVM 8 <b>$25.99/mo</b>。</td>
+                <td>買方案 → 綁網域/免費網域 → 安裝 WordPress / 使用建站器 / 遷移網站；VPS 可一鍵裝 OS / App，或用 Horizons 做無代碼 / AI 建站。</td>
+                <td>入門價低、SSL / 備份 / 遷移 / 支援齊；WordPress / 企業站 / 小電商很順手。</td>
+                <td>促銷價與續約價差距明顯；較偏傳統主機，不是最彈性的雲原生平台。</td>
+                <td>部落格、企業官網、WordPress、電商、初學者、SMB。</td>
+              </tr>
+              <tr>
+                <td><b>Zeabur</b><br><span class="muted">AI DevOps / PaaS</span></td>
+                <td>Free <b>$0</b>；Dev <b>$5/mo</b>（前 14 天免費）；Pro <b>$19/mo</b>（前 14 天免費）；Team <b>$79/mo</b> 起（3 席）；Enterprise 客製。專用伺服器 / 區域價格會依雲商與地區變動。</td>
+                <td>選擇伺服器 / 叢集 → 選雲供應商與區域 → 用 Zeabur Agent / 控制台部署；可管理自有伺服器，快速用模板或 GitHub 啟動。</td>
+                <td>自動化高、部署體驗順、支援團隊協作與多雲 / 自有主機、AI Assistant 與模板生態完整。</td>
+                <td>傳統網站 / WordPress 不是最主場；免費版限制較多，共享集群已 deprecated。</td>
+                <td>獨立開發者、容器化應用、團隊協作、想省維運的人、快速原型團隊。</td>
+              </tr>
+              <tr>
+                <td><b>Render</b><br><span class="muted">雲端應用平台</span></td>
+                <td>Workspace + Compute 分離計費；Hobby <b>$0/mo</b>、Pro <b>$25/mo</b>、Scale <b>$499/mo</b>、Enterprise 客製。Static Sites <b>$0</b>；Services 起價 <b>$0/mo</b>；Compute 按秒計費，SSD <b>$0.25/GB/mo</b>。</td>
+                <td>連 Git repo → 選 Static Site / Web Service / Worker / Private Service → 設環境變數與網域 → 自動部署；也可用 Blueprint / render.yaml / Terraform。</td>
+                <td>Git 驅動、技術棧支援廣、預覽環境與治理能力完整，並提供 CDN、TLS、Private Links、監控與回滾。</td>
+                <td>費用會隨 compute、儲存與流量累加；比傳統主機更偏工程團隊，Web service 有執行 / 連線約束。</td>
+                <td>新創、產品團隊、後端/前端/worker 應用、正式上線服務、偏 GitOps 團隊。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="platforms">
+        <div class="section-head">
+          <div>
+            <h2>三張平台卡片</h2>
+            <p>更像簡報中的三欄產品定位頁</p>
+          </div>
+          <p>各卡片都保留價格、優缺點與適用人群</p>
+        </div>
+        <div class="comparison-grid">
+          <article class="card">
+            <span class="platform-tag">01 · traditional hosting</span>
+            <h3>Hostinger</h3>
+            <div class="price">$2.99<sub>/mo 起</sub></div>
+            <p class="subcopy">最像「開店即用」的網站主機：你要的是快、便宜、少折騰，它很合適。</p>
+            <div class="pill-row">
+              <span class="pill">WordPress</span><span class="pill">網站建構器</span><span class="pill">VPS</span><span class="pill">AI 建站</span>
+            </div>
+            <div class="two-col">
+              <div class="mini">
+                <h4>優點</h4>
+                <ul>
+                  <li>入門成本低</li>
+                  <li>支援 / 備份 / SSL 齊全</li>
+                  <li>WordPress 上手快</li>
+                </ul>
+              </div>
+              <div class="mini">
+                <h4>缺點</h4>
+                <ul>
+                  <li>續約價落差大</li>
+                  <li>雲原生彈性有限</li>
+                  <li>複雜應用不理想</li>
+                </ul>
+              </div>
+            </div>
+            <div class="linkline" style="margin-top:14px">
+              <a href="https://www.hostinger.com/web-hosting" target="_blank" rel="noreferrer">Web Hosting</a>
+              <a href="https://www.hostinger.com/vps-hosting" target="_blank" rel="noreferrer">VPS Hosting</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <span class="platform-tag">02 · AI devops / pAAS</span>
+            <h3>Zeabur</h3>
+            <div class="price">Free <sub>→ $79+ / mo</sub></div>
+            <p class="subcopy">把部署做成對話與模板：對開發者與小團隊來說，速度與體驗很有吸引力。</p>
+            <div class="pill-row">
+              <span class="pill">GitHub</span><span class="pill">Agent</span><span class="pill">多雲</span><span class="pill">私有網路</span>
+            </div>
+            <div class="two-col">
+              <div class="mini">
+                <h4>優點</h4>
+                <ul>
+                  <li>部署流程直覺</li>
+                  <li>AI Assistant / 模板強</li>
+                  <li>支援自有伺服器</li>
+                </ul>
+              </div>
+              <div class="mini">
+                <h4>缺點</h4>
+                <ul>
+                  <li>WordPress 非主場</li>
+                  <li>免費版限制多</li>
+                  <li>共享集群已 deprecated</li>
+                </ul>
+              </div>
+            </div>
+            <div class="linkline" style="margin-top:14px">
+              <a href="https://zeabur.com/pricing" target="_blank" rel="noreferrer">Pricing</a>
+              <a href="https://zeabur.com/docs/en-US/get-started/quick-start" target="_blank" rel="noreferrer">Quick Start</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <span class="platform-tag">03 · production pAAS</span>
+            <h3>Render</h3>
+            <div class="price">$0 <sub>→ $499+ / mo</sub></div>
+            <p class="subcopy">偏正式產品與團隊治理：你要的是可持續擴展、預覽環境與標準化部署，它很強。</p>
+            <div class="pill-row">
+              <span class="pill">CDN</span><span class="pill">Autoscaling</span><span class="pill">RBAC</span><span class="pill">Terraform</span>
+            </div>
+            <div class="two-col">
+              <div class="mini">
+                <h4>優點</h4>
+                <ul>
+                  <li>Git 驅動部署</li>
+                  <li>治理 / 合規能力完整</li>
+                  <li>支援多種服務類型</li>
+                </ul>
+              </div>
+              <div class="mini">
+                <h4>缺點</h4>
+                <ul>
+                  <li>計費較碎片化</li>
+                  <li>較偏工程團隊</li>
+                  <li>要懂 compute / 流量</li>
+                </ul>
+              </div>
+            </div>
+            <div class="linkline" style="margin-top:14px">
+              <a href="https://render.com/pricing" target="_blank" rel="noreferrer">Pricing</a>
+              <a href="https://render.com/docs/your-first-deploy" target="_blank" rel="noreferrer">First Deploy</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="recommend">
+        <div class="section-head">
+          <div>
+            <h2>推薦情境</h2>
+            <p>如果你只想知道「哪個最適合我」</p>
+          </div>
+          <p>快速選型</p>
+        </div>
+        <div class="recommend">
+          <article class="card">
+            <span class="badge good">Best for simple websites</span>
+            <strong>選 Hostinger</strong>
+            <p class="subcopy">如果你想快速上線企業站、部落格、WordPress 或小電商，它最省事也最便宜。</p>
+          </article>
+          <article class="card">
+            <span class="badge warn">Best for builders</span>
+            <strong>選 Zeabur</strong>
+            <p class="subcopy">如果你在做 API、SaaS 原型、容器化服務，或希望盡量少碰維運，Zeabur 很有感。</p>
+          </article>
+          <article class="card">
+            <span class="badge accent">Best for teams</span>
+            <strong>選 Render</strong>
+            <p class="subcopy">如果你是正式產品、需要 CI/CD、預覽環境、權限與擴展，Render 的定位最完整。</p>
+          </article>
+        </div>
+      </section>
+
+      <div class="footer-note">
+        <b>註記：</b>以上費用為官方公開頁面的常見展示值，會因地區、促銷週期、綁約長度、用量與帳號設定而變動。<br>
+        Hostinger 多以長約促銷；Zeabur 的專用伺服器與區域價格會動態變化；Render 則是 Workspace + Compute 分離計費，實際月費要把流量、儲存與 compute 一起算。
+      </div>
+    </div>
+  </div>
+</body>
+</html>
