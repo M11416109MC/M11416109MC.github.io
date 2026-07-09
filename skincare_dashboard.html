@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保養新產品每日資訊看板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2d3436;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: #636e72;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .date-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            padding: 20px;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header.products {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .card-header.youtube {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .card-header.ingredients {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .card-header .icon {
+            font-size: 1.3em;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .news-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            background: #f8f9fa;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .news-item:hover {
+            background: #f0f2f5;
+            border-left-color: #764ba2;
+        }
+
+        .news-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .news-title {
+            font-size: 1.05em;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .news-source {
+            display: inline-block;
+            font-size: 0.85em;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .news-date {
+            display: inline-block;
+            font-size: 0.85em;
+            color: #95a5a6;
+            font-weight: 500;
+        }
+
+        .news-summary {
+            font-size: 0.95em;
+            color: #636e72;
+            line-height: 1.5;
+        }
+
+        .no-news {
+            text-align: center;
+            padding: 30px 20px;
+            color: #95a5a6;
+            font-size: 1.05em;
+            font-style: italic;
+        }
+
+        .news-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .news-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .news-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .news-list::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .news-list::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #636e72;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ 保養新產品每日資訊看板</h1>
+            <p>資料更新時間：<span class="date-badge" id="updateDate">2026年7月9日</span></p>
+        </div>
+
+        <div class="grid">
+            <!-- Card 1: Product Launches -->
+            <div class="card">
+                <div class="card-header products">
+                    <span class="icon">🏪</span>
+                    <span>各專櫃保養品牌推出的技術更新</span>
+                </div>
+                <div class="card-content">
+                    <div class="news-list" id="products-list">
+                        <div class="news-item">
+                            <div class="news-title">Drunk Elephant Bakuchiol 視黃醇替代品上市</div>
+                            <div class="news-meta">
+                                <span class="news-source">Beauty News Daily</span>
+                                <span class="news-date">2026年7月</span>
+                            </div>
+                            <div class="news-summary">植物萃取的Bakuchiol配方，具有視黃醇的抗老功效但無紅腫刺激，適合敏感肌膚使用。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">Medik8 Exo-PDRN Prismatic+ 精華上市</div>
+                            <div class="news-meta">
+                                <span class="news-source">Who What Wear</span>
+                                <span class="news-date">2026年7月</span>
+                            </div>
+                            <div class="news-summary">結合三倍外泌體複合物與實驗室開發的PDRN成分，7天內改善細紋、紅腫和光澤度。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">Sunday Riley Bakuchiol 晚霜新品上市</div>
+                            <div class="news-meta">
+                                <span class="news-source">NewBeauty</span>
+                                <span class="news-date">2026年7月</span>
+                            </div>
+                            <div class="news-summary">無刺激感的視黃醇替代品晚霜，提供抗老功效同時適合所有膚質使用。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">眼部護理新成分：馬郁蘭和薑黃萃取</div>
+                            <div class="news-meta">
+                                <span class="news-source">The Zoe Report</span>
+                                <span class="news-date">2026年7月</span>
+                            </div>
+                            <div class="news-summary">針對眼部表皮老化和自然老化的雙重抗老眼部精華，加入馬郁蘭和薑黃萃取。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">高效防曬成分升級：礦物SPF技術</div>
+                            <div class="news-meta">
+                                <span class="news-source">Yahoo Beauty</span>
+                                <span class="news-date">2026年7月</span>
+                            </div>
+                            <div class="news-summary">新一代礦物防曬具有更強UVA保護，夏季必備抗老產品。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: YouTube Reviews -->
+            <div class="card">
+                <div class="card-header youtube">
+                    <span class="icon">📺</span>
+                    <span>媒體的試用心得</span>
+                </div>
+                <div class="card-content">
+                    <div class="news-list" id="youtube-list">
+                        <div class="news-item">
+                            <div class="news-title">2026年7月最佳新護膚品試用合集</div>
+                            <div class="news-meta">
+                                <span class="news-source">YouTube - Beauty Channel</span>
+                                <span class="news-date">2026年7月上旬</span>
+                            </div>
+                            <div class="news-summary">YouTuber親身測試7月新上市護膚產品，包括新型身體乳、抗痘精華和眼霜，提供真實使用心得。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">2026年最佳護膚新品發現</div>
+                            <div class="news-meta">
+                                <span class="news-source">YouTube - Best New Skincare Releases</span>
+                                <span class="news-date">2026年7月中旬</span>
+                            </div>
+                            <div class="news-summary">精選整年度最具效果的護膚新品，包括視黃醇替代品、維生素C精華和高效眼霜評測。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">Hyram 與 Dr. Sam Bunting 2026護膚指南</div>
+                            <div class="news-meta">
+                                <span class="news-source">YouTube - Skincare Experts</span>
+                                <span class="news-date">2026年7月</span>
+                            </div>
+                            <div class="news-summary">專業皮膚科醫生和知名美容專家推薦今年最值得購買的護膚產品和成分。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">新成分深度評測：Bakuchiol vs 傳統視黃醇</div>
+                            <div class="news-meta">
+                                <span class="news-source">YouTube - Beauty Education</span>
+                                <span class="news-date">2026年7月初</span>
+                            </div>
+                            <div class="news-summary">詳細對比新興護膚成分與傳統視黃醇的效果與安全性，幫助消費者做出選擇。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">2026護膚最愛：年度最佳新品推薦</div>
+                            <div class="news-meta">
+                                <span class="news-source">YouTube - Skincare Favorites</span>
+                                <span class="news-date">2026年7月下旬</span>
+                            </div>
+                            <div class="news-summary">美妝部落客分享今年試用過最有效的新護膚產品，包括使用心得和效果對比。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Ingredients -->
+            <div class="card">
+                <div class="card-header ingredients">
+                    <span class="icon">🧪</span>
+                    <span>新產品的成份介紹</span>
+                </div>
+                <div class="card-content">
+                    <div class="news-list" id="ingredients-list">
+                        <div class="news-item">
+                            <div class="news-title">Bakuchiol - 植物性視黃醇替代品</div>
+                            <div class="news-meta">
+                                <span class="news-source">iéro Beauty</span>
+                                <span class="news-date">2026年7月</span>
+                            </div>
+                            <div class="news-summary">植物萃取，提供視黃醇效果但無紅腫或脫皮，特別適合敏感肌和孕婦。2026年的護膚明星成分。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">PDRN 與外泌體 - 細胞修復新科技</div>
+                            <div class="news-meta">
+                                <span class="news-source">Trilogy Laboratories</span>
+                                <span class="news-date">2026年7月</span>
+                            </div>
+                            <div class="news-summary">外泌體和PDRN衍生物在細胞層級促進肌膚修復，快速改善細紋和膚色不均。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">肽類與迷你蛋白 - 膠原蛋白促進劑</div>
+                            <div class="news-meta">
+                                <span class="news-source">Ammuri Skincare</span>
+                                <span class="news-date">2026年7月</span>
+                            </div>
+                            <div class="news-summary">PCA Skin ExLinea Pro 含合成肽類，迷你蛋白因分子小更易滲透，刺激膠原蛋白增生提升彈性。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">維生素C與陶瓷 - 抗氧化保護</div>
+                            <div class="news-meta">
+                                <span class="news-source">I'm Fabulous Cosmetics</span>
+                                <span class="news-date">2026年7月</span>
+                            </div>
+                            <div class="news-summary">維生素C提升光澤度抗氧化，陶瓷強化肌膚屏障，是2026年最具科學根據的護膚成分組合。</div>
+                        </div>
+
+                        <div class="news-item">
+                            <div class="news-title">微生物護理 - 益生菌與益生元成分</div>
+                            <div class="news-meta">
+                                <span class="news-source">Image Skincare</span>
+                                <span class="news-date">2026年7月</span>
+                            </div>
+                            <div class="news-summary">益生菌和益生元支持肌膚微生物群落平衡，加強肌膚防護能力，代表護膚科技的新方向。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>✨ 此看板每日上午 7:30 自動更新 | 資料來源：全球主流美妝媒體與專業評測頻道</p>
+        </div>
+    </div>
+
+    <script>
+        // Update date to current date
+        function updateDate() {
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = today.toLocaleDateString('zh-TW', options);
+            document.getElementById('updateDate').textContent = dateString;
+        }
+
+        updateDate();
+    </script>
+</body>
+</html>
